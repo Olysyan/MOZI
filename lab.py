@@ -54,7 +54,7 @@ def AC(string,a,b,alf):
         for j in d:
             if i ==j:
                 res+= d[((a*d.index(j)+b)%p)]
-    print(f"Зашифрованно аффинным шифром с параметрами {a,b} : {res}\n")
+    print(f"Зашифровано аффинным шифром с параметрами {a,b} : {res}\n")
     return [res,a,b]
 #расшифрование аффинного шифра
 def DAC(string,a,b,alf):
@@ -104,7 +104,7 @@ def ARC(string,a,b,c,d,alf):
                 x = (b + d)%p
                 res+= dict[((y*dict.index(j)+x)%p)]
                 a,c,b,d=c,y,d,x
-    print(f"Зашифрованно аффинным рекуррентным шифром с параметрами {a1,b1,c1,d1} : {res}\n")
+    print(f"Зашифровано аффинным рекуррентным шифром с параметрами {a1,b1,c1,d1} : {res}\n")
     return [res,a1,b1,c1,d1]
 #расшивровка аффинного рекуррентного шифра
 def DARC(string,a,b,c,d,alf):
