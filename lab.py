@@ -111,6 +111,10 @@ def DARC(string,a,b,c,d,alf):
     dict =[i for i in alf]
     res=""
     p = len(dict)
+    a1=a
+    b1=b
+    c1=c
+    d1=d
     for i in string:    
         for j in dict:
             if i ==j:
@@ -118,7 +122,7 @@ def DARC(string,a,b,c,d,alf):
                 x = (b + d)%p
                 res+= dict[(evkl(y,p)[0]*(dict.index(j)-x))%p]
                 a,c,b,d = c,y,d,x
-    print(f"Результат расшифровки с параметрами {a,b,c,d} : {res}\n")
+    print(f"Результат расшифровки с параметрами {a1,b1,c1,d1} : {res}\n")
     return res
 #пример работы
 string = "шуе ппш ппш шуе"
