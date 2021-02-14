@@ -61,13 +61,9 @@ def Hill(str,matrixkey,alf):
     str_mass = mult(str,block,dict_alf)
     result = str_mass
     for i in range(len(str_mass)):
-        result[i]= numpy.dot(matrix_key,str_mass[i])
-    matrix_res=[[0]*block for i in range(len(str_mass))]
+        result[i]= numpy.dot(matrix_key,str_mass[i])%p
     for i in range(len(str_mass)):
-        for j,k in enumerate(str_mass[i]):
-            matrix_res[i][j]=k%p
-    for i in range(len(str_mass)):
-        for j in matrix_res[i]:
+        for j in result[i]:
             res+= dict_alf[j]
     print(f"зашифровано шифром Хилла: {res}")
     return res
@@ -97,13 +93,9 @@ def DHill(str,matrixkey,alf):
     str_mass = mult(str,block,dict_alf)
     result = str_mass
     for i in range(len(str_mass)):
-        result[i]= numpy.dot(matrix_key,str_mass[i])
-    matrix_res=[[0]*block for i in range(len(str_mass))]
+        result[i]= numpy.dot(matrix_key,str_mass[i])%p
     for i in range(len(str_mass)):
-        for j,k in enumerate(str_mass[i]):
-            matrix_res[i][j]=k%p
-    for i in range(len(str_mass)):
-        for j in matrix_res[i]:
+        for j in result[i]:
             res+= dict_alf[j]
     print(f"шифр Хилла расшифрован: {res}")
     return res
@@ -128,12 +120,8 @@ def RHill(str,matrixkey1,matrixkey2,alf):
         result[i]= numpy.dot(matrix_key,str_mass[i])%p
         matrix_key1, matrix_key2= matrix_key2, matrix_key
         i+=1
-    matrix_res=[[0]*block for i in range(len(str_mass))]
     for i in range(len(str_mass)):
-        for j,k in enumerate(str_mass[i]):
-            matrix_res[i][j]=k%p
-    for i in range(len(str_mass)):
-        for j in matrix_res[i]:
+        for j in result[i]:
             res+= dict_alf[j]
     print(f"зашифровано рекуррентным шифром Хилла: {res}")
     return res
@@ -166,9 +154,7 @@ def DRHill(str,matrixkey1,matrixkey2,alf):
 #криптоанализ атакой подбора на ключ-матрицу
 def CA(str,len_key,alf):
     dict_alf=[i for i in alf]
-    p= len(dict_alf)
     newstr=str[0:2*len_key]
-    str_mass = mult(newstr,len_key,dict_alf)
     key_test1=""
     f=""
     system("echo начало >  brute.txt")
@@ -181,10 +167,10 @@ def CA(str,len_key,alf):
             key_test1=""
         key_test1=""
     return 0
-str = "зашифровал и расшифровал шифром хилла"
+str = "зашифровал"
 alf=",- !?./йцукенгшщзхъфывапролджэячстмиьбю"
-matrixkey1="аепш"
-matrixkey2="енко"
+matrixkey1="шифр"
+matrixkey2="мой!"
 newstr=Hill(str,matrixkey1,alf)
 DHill(newstr,matrixkey1,alf)
 rhill=RHill(str,matrixkey1,matrixkey2,alf)
