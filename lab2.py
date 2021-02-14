@@ -1,5 +1,4 @@
 #!/bin/python3.8
-from ast import Str
 import numpy
 from crypto import nod,evkl
 from os import system
