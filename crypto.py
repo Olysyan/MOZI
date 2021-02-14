@@ -14,7 +14,7 @@ def nod(x,y):
 #расширенный алгоритм Евклида, вычисление a^-1 (mod b)
 def evkl(a,b):
     if nod(a,b)>1:
-        print("Not exist")
+        print("Нет обратного элемента")
         return False
     else:
         t=1

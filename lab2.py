@@ -1,6 +1,9 @@
 #!/bin/python3.8
+from ast import Str
 import numpy
 from crypto import nod,evkl
+from os import system
+import itertools
 #конструктор матрицы
 def matrixconst(matrixwords,dict_alf):
     matrixkey=[i for i in matrixwords]
@@ -67,7 +70,7 @@ def Hill(str,matrixkey,alf):
     for i in range(len(str_mass)):
         for j in matrix_res[i]:
             res+= dict_alf[j]
-    print(f"зашифрованоы шифром Хилла: {res}")
+    print(f"зашифровано шифром Хилла: {res}")
     return res
 #алгебраич дополн
 def algebr(matrix,len_alf):
@@ -91,8 +94,7 @@ def DHill(str,matrixkey,alf):
     matrix_key = numpy.transpose(matrix_key)
     det = round(numpy.linalg.det(matrix_key)%p)
     matrix_key=algebr(matrix_key,p)
-    matrix_key = evkl(det,p)[0]*matrix_key
-    matrix_key%=p
+    matrix_key = (evkl(det,p)[0]*matrix_key)%p
     str_mass = mult(str,block,dict_alf)
     result = str_mass
     for i in range(len(str_mass)):
@@ -162,11 +164,30 @@ def DRHill(str,matrixkey1,matrixkey2,alf):
             res+= dict_alf[j]
     print(f"реккурентный шифр Хилла расшифрован: {res}")
     return res
-str = "Зашифровал и расшифровал шифром Хилла"
-alf=",- !?./йцукенгшщзхъфывапролджэячстмиьбюЙЦУКЕНГШЩЗХЪЭЖДЛОРПАВЫФЯЧСМИТЬБЮ"
-matrixkey1="аепшанеоеорпнгле"
-matrixkey2="аеполпроеенгнгма"
+#криптоанализ атакой подбора на ключ-матрицу
+def CA(str,len_key,alf):
+    dict_alf=[i for i in alf]
+    p= len(dict_alf)
+    newstr=str[0:2*len_key]
+    str_mass = mult(newstr,len_key,dict_alf)
+    key_test1=""
+    f=""
+    system("echo начало >  brute.txt")
+    for comb in itertools.product(dict_alf,repeat=len_key):
+        key_test1= comb[0]+comb[1]+comb[2]+comb[3]
+        try:
+            m = DHill(newstr,key_test1,alf)
+            system(f"echo '{key_test1}\n {m}\n' >>  brute.txt")
+        except:                
+            key_test1=""
+        key_test1=""
+    return 0
+str = "зашифровал и расшифровал шифром хилла"
+alf=",- !?./йцукенгшщзхъфывапролджэячстмиьбю"
+matrixkey1="аепш"
+matrixkey2="енко"
 newstr=Hill(str,matrixkey1,alf)
 DHill(newstr,matrixkey1,alf)
 rhill=RHill(str,matrixkey1,matrixkey2,alf)
-DRHill(rhill,matrixkey1,matrixkey2,alf)
+DRHill(rhill,matrixkey1,matrixkey2,alf) 
+#CA(newstr,len(matrixkey1),alf)
