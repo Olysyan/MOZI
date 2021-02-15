@@ -142,12 +142,8 @@ def DRHill(str,matrixkey1,matrixkey2,alf):
         matrix_key=(evkl(det,p)[0]*numpy.transpose(algebr(matrix_key,p)))%p
         result[i]= numpy.dot(matrix_key,str_mass[i])%p
         matrix_key1, matrix_key2=  matrix_key2,matrix_mul
-    matrix_res=[[0]*block for i in range(len(str_mass))]
     for i in range(len(str_mass)):
-        for j,k in enumerate(str_mass[i]):
-            matrix_res[i][j]=k%p
-    for i in range(len(str_mass)):
-        for j in matrix_res[i]:
+        for j in result[i]:
             res+= dict_alf[j]
     print(f"реккурентный шифр Хилла расшифрован: {res}")
     return res
@@ -167,11 +163,12 @@ def CA(str,len_key,alf):
             key_test1=""
         key_test1=""
     return 0
-str = "зашифровал"
+str = "зашифровал и вот что получилось"
 alf=",- !?./йцукенгшщзхъфывапролджэячстмиьбю"
 matrixkey1="шифр"
 matrixkey2="мой!"
 newstr=Hill(str,matrixkey1,alf)
+print(f"1 ключ-слово: {matrixkey1} \n2 ключ-слово: {matrixkey2}")
 DHill(newstr,matrixkey1,alf)
 rhill=RHill(str,matrixkey1,matrixkey2,alf)
 DRHill(rhill,matrixkey1,matrixkey2,alf) 
