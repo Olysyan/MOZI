@@ -163,7 +163,36 @@ def CA(str,len_key,alf):
             key_test1=""
         key_test1=""
     return 0
-str = "зашифровал и вот что получилось"
+#Частотный криптоанализ блоков шифротекста
+def CA2(str,len_key):
+    len_key=len_key**(1/2)
+    k = 0
+    l = len(str)/len_key
+    d = {}
+    di=[]
+    ss=""
+    for i in str:
+        ss+=i
+        if len(ss)==len_key and (ss  not in di):
+            di.append(ss)
+            ss=""
+        elif ss  in di:
+            ss=""
+    s=""
+    for i in di:
+        for j in str:
+            s+=j
+            if len(s)==len_key:
+                if i==s:
+                    k+=1
+                d[i]=f"{k*100/l}%"
+                s=""
+        k =0
+    res={k:v for k,v in sorted(d.items(),key = lambda i:i[1])}
+    print(res)
+    return res
+
+str = "зазазазазазапппппп л лаа"
 alf=",- !?./йцукенгшщзхъфывапролджэячстмиьбю"
 matrixkey1="шифр"
 matrixkey2="мой!"
@@ -171,5 +200,5 @@ newstr=Hill(str,matrixkey1,alf)
 print(f"1 ключ-слово: {matrixkey1} \n2 ключ-слово: {matrixkey2}")
 DHill(newstr,matrixkey1,alf)
 rhill=RHill(str,matrixkey1,matrixkey2,alf)
-DRHill(rhill,matrixkey1,matrixkey2,alf) 
-#CA(newstr,len(matrixkey1),alf)
+DRHill(rhill,matrixkey1,matrixkey2,alf)  
+CA2(newstr,len(matrixkey1))
