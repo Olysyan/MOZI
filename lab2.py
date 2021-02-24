@@ -31,8 +31,6 @@ def matrixconst(matrixwords,dict_alf):
 def mult(str,block,dict_alf):
     str_dict = [i for i in str]
     f,j,k=0,0,0
-    while len(str_dict)%block!=0:
-        str_dict.append(" ")
     for i in str_dict:
         if i in dict_alf:
             str_dict[j]=dict_alf.index(i)
@@ -54,19 +52,24 @@ def Hill(str,matrixkey,alf):
     dict_alf =[i for i in alf]
     p =len(alf)
     matrix_key = matrixconst(matrixkey,dict_alf)
+    print(matrix_key[0])
     block = int(len(matrix_key[0]))
+    print(len(str),block)
+    while len(str)%block!=0:
+        str+=" "
     det = round(numpy.linalg.det(matrix_key)%p)
     if nod(det,p)!=1 or det==0:
         return "введите другое ключ-слово"
     str_mass = mult(str,block,dict_alf)
+    print(str_mass)
     result = str_mass
     for i in range(len(str_mass)):
         result[i]= numpy.dot(matrix_key,str_mass[i])%p
     for i in range(len(str_mass)):
         for j in result[i]:
             res+= dict_alf[j]
-    print(f"зашифровано шифром Хилла: {res}")
-    return res
+    print(f"зашифровано шифром Хилла с параметрами матрицы {matrix_key}: {res} ")
+    return [res,matrix_key]
 #алгебраич дополн
 def algebr(matrix,len_alf):
     l=len(matrix)
@@ -165,7 +168,6 @@ def CA(str,len_key,alf):
     return 0
 #Частотный криптоанализ блоков шифротекста
 def CA2(str,len_key):
-    len_key=len_key**(1/2)
     k = 0
     l = len(str)/len_key
     d = {}
@@ -178,27 +180,27 @@ def CA2(str,len_key):
             ss=""
         elif ss  in di:
             ss=""
-    s=""
+    str_mass=[str[i:i + len_key] for i in range(0, len(str) - (len(str) % len_key), len_key)]
+    print(di,"\n",str_mass)
     for i in di:
-        for j in str:
-            s+=j
-            if len(s)==len_key:
-                if i==s:
-                    k+=1
-                d[i]=f"{k*100/l}%"
-                s=""
+        for j in str_mass:
+            if j==i:
+                k+=1
+        d[i]=k/l
         k =0
     res={k:v for k,v in sorted(d.items(),key = lambda i:i[1])}
     print(res)
     return res
-
-str = "зазазазазазапппппп л лаа"
+str = "шифрую шифр зашифрованный шифровальщиком"
 alf=",- !?./йцукенгшщзхъфывапролджэячстмиьбю"
-matrixkey1="шифр"
+matrixkey1="шифровкам"
 matrixkey2="мой!"
 newstr=Hill(str,matrixkey1,alf)
 print(f"1 ключ-слово: {matrixkey1} \n2 ключ-слово: {matrixkey2}")
-DHill(newstr,matrixkey1,alf)
-rhill=RHill(str,matrixkey1,matrixkey2,alf)
-DRHill(rhill,matrixkey1,matrixkey2,alf)  
-CA2(newstr,len(matrixkey1))
+DHill(newstr[0],matrixkey1,alf)
+#rhill=RHill(str,matrixkey1,matrixkey2,alf)
+#DRHill(rhill,matrixkey1,matrixkey2,alf)  
+print("Частотный криптоанализ для зашифрованного текста: ")
+CA2(newstr[0],len(newstr[1]))
+print("Частотный криптоанализ для входного текста: ")
+CA2(str,len(newstr[1]))
