@@ -111,7 +111,7 @@ def dsqrt(a,p):
 #разложение составного числа на простые
 def simpnum(num):
     a={1}
-    for i in range(2,int(num/2)):
+    for i in range(2,int(num/2)+1):
         while num%i==0:
             a.add(i)
             num = int(num/i)
@@ -124,7 +124,7 @@ def Pnum(set_p):
     for i in set_p:
         r*=i
     return int(r)
-#Pollard быстрее алгоритма simnum на несколько порядков
+#Pollard быстрее алгоритма simpnum на несколько порядков, не работает с числами меньше трех знаков
 def Pollard(num,p={1}):
     a=2
     b=2
@@ -135,11 +135,11 @@ def Pollard(num,p={1}):
         b=(b**2+1)%num
         d=nod(a-b,num)
         if d == num:
-            p.add(d)
+            p.add(int(d))
             return list(p)
         if 1<d<num:
             Pollard(num/d)
-            p.add(d)
+            p.add(int(d))
     return list(p)
 #вычисление квадратного корня по модулю составного числа
 def comparison(a,b):

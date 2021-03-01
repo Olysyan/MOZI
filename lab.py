@@ -2,7 +2,7 @@
 from crypto import evkl,nod
 #шифр простой замены
 def SRC(string,kkk,alf):
-    dict_alf =[i for i in alf]
+    dict_alf =list(alf)
     p =len(alf)
     while nod(kkk,p)!=1:
         print(f"Введите подходящие параметры для алфавита мощностью {p}: ")
@@ -17,7 +17,7 @@ def SRC(string,kkk,alf):
     return [crypt,kkk]
 #Расшифровка
 def DSRC(string,kkk,alf):
-    dict_alf =[i for i in alf]
+    dict_alf =list(alf)
     encrypt=""
     p =len(alf)
     for i in string:
@@ -27,7 +27,7 @@ def DSRC(string,kkk,alf):
     return encrypt
 #частотный анализ шифра простой замены
 def FCA(string):
-    dict = {i for i in string}
+    dict = set(string)
     k = 0
     l = len(string)
     d = {}
@@ -35,14 +35,13 @@ def FCA(string):
         for j in string:
             if i == j:
                 k+=1
-        d[i]=f"{k*100/l}%"
+        d[i]=k*100/l
         k =0
     res={k:v for k,v in sorted(d.items(),key = lambda i:i[1])}
-    print(f"Результат частотного криптоанализа для входящей последователности: {res}\n")
     return res
 #аффинный шифр
 def AC(string,a,b,alf):
-    dict =[i for i in alf]
+    dict =list(alf)
     res=""
     p = len(dict)
     d=[i for i in dict]
@@ -58,7 +57,7 @@ def AC(string,a,b,alf):
     return [res,a,b]
 #расшифрование аффинного шифра
 def DAC(string,a,b,alf):
-    d =[i for i in alf]
+    d =list(alf)
     res=""
     p = len(d)
     for i in string:    
@@ -125,7 +124,7 @@ def DARC(string,a,b,c,d,alf):
     print(f"Результат расшифровки с параметрами {a1,b1,c1,d1} : {res}\n")
     return res
 #пример работы
-string = "зашифровал."
+""" string = "зашифровал."
 alf=",- !?./йцукенгшщзхъфывапролджэячстмиьбюЙЦУКЕНГШЩЗХЪЭЖДЛОРПАВЫФЯЧСМИТЬБЮ"
 ff =SRC(string,5,alf)#зашифровываем сообщение методом простой замены
 DSRC(ff[0],ff[1],alf) #расшифровываем это сообщение
@@ -134,4 +133,4 @@ a = AC(string,2,7,alf)#зашифровываем аффинным шифром
 DAC(a[0],a[1],a[2],alf)#расшифровываем
 #mapping(FCA(a[0]),FCA(string))#сопоставляем частотные анализы
 m = ARC(string,2,3,5,7,alf)#зашифровываем Аффинным рекуррентным шифром
-DARC(m[0],m[1],m[2],m[3],m[4],alf)#расшифровываем
+DARC(m[0],m[1],m[2],m[3],m[4],alf)#расшифровываем """

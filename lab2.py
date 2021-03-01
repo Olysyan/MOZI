@@ -189,7 +189,6 @@ def CA2(str,len_key):
         d[i]=k/l
         k =0
     res={k:v for k,v in sorted(d.items(),key = lambda i:i[1])}
-    print(res)
     return res
 str = "шифрую шифр зашифрованный шифровальщиком"
 alf=",- !?./йцукенгшщзхъфывапролджэячстмиьбю"
@@ -198,9 +197,9 @@ matrixkey2="мой!"
 newstr=Hill(str,matrixkey1,alf)
 print(f"1 ключ-слово: {matrixkey1} \n2 ключ-слово: {matrixkey2}")
 DHill(newstr[0],matrixkey1,alf)
-#rhill=RHill(str,matrixkey1,matrixkey2,alf)
-#DRHill(rhill,matrixkey1,matrixkey2,alf)  
-print("Частотный криптоанализ для зашифрованного текста: ")
+""" rhill=RHill(str,matrixkey1,matrixkey2,alf)
+DRHill(rhill,matrixkey1,matrixkey2,alf)   """
+""" print("Частотный криптоанализ для зашифрованного текста: ")
 CA2(newstr[0],len(newstr[1]))
 print("Частотный криптоанализ для входного текста: ")
-CA2(str,len(newstr[1]))
+CA2(str,len(newstr[1])) """
