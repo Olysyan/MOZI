@@ -1,7 +1,7 @@
 #!/bin/python3.8
-#Шифр Веженера
+#Шифр Виженера
 from collections import Counter
-def Veg(str,key,alf):
+def Vig(str,key,alf):
     dict_key=list(key)
     dict_alf = list(alf)
     dict_str=list(str)
@@ -10,12 +10,13 @@ def Veg(str,key,alf):
     result=""
     j=0
     for i in dict_str:
+        #print(f"{dict_alf.index(i)}+{dict_alf.index(dict_key[j%ll])} = {(dict_alf.index(i)+dict_alf.index(dict_key[j%ll]))%p} (mod {p}) = {dict_alf[(dict_alf.index(i)+dict_alf.index(dict_key[j%ll]))%p]}")
         result += dict_alf[(dict_alf.index(i)+dict_alf.index(dict_key[j%ll]))%p]
         j+=1
-    print(result)
+    print(f"шифовка с ключем {key}: {result}")
     return result
-#Расшифровка шифра Веженера
-def DVeg(str,key,alf):
+#Расшифровка шифра Виженера
+def DVig(str,key,alf):
     dict_key=list(key)
     dict_alf = list(alf)
     dict_str=list(str)
@@ -24,12 +25,13 @@ def DVeg(str,key,alf):
     result=""
     j=0
     for i in dict_str:
+        #print(f"{dict_alf.index(i)}-{dict_alf.index(dict_key[j%ll])} = {(dict_alf.index(i)-dict_alf.index(dict_key[j%ll]))%p} (mod {p}) = {dict_alf[(dict_alf.index(i)-dict_alf.index(dict_key[j%ll]))%p]}")
         result += dict_alf[(dict_alf.index(i)-dict_alf.index(dict_key[j%ll]))%p]
         j+=1
-    print(result)
+    print(f"расшифовка с ключем {key}: {result}")
     return result
-#Шифр Веженера по открытому тексту
-def OVeg(str,key,alf):
+#Шифр Виженера по открытому тексту
+def OVig(str,key,alf):
     if len(key)!=1:
         print("Введите корректный ключ")
         return 0
@@ -43,12 +45,13 @@ def OVeg(str,key,alf):
     result=""
     j=0
     for i in dict_str:
+        #print(f"{dict_alf.index(i)} +{dict_alf.index(dict_key[j%ll])} = {(dict_alf.index(i)+dict_alf.index(dict_key[j%ll]))%p} (mod {p})= {dict_alf[(dict_alf.index(i)+dict_alf.index(dict_key[j%ll]))%p]}")
         result += dict_alf[(dict_alf.index(i)+dict_alf.index(dict_key[j%ll]))%p]
         j+=1
-    print(result)
+    print(f"шифовка с начальным ключем {key}: {result}")
     return result
-#Расшифровка шифра Веженера по открытому тексту
-def DOVeg(str,key,alf):
+#Расшифровка шифра Виженера по открытому тексту
+def DOVig(str,key,alf):
     dict_alf = list(alf)
     dict_str=list(str)
     dict_key=[key]
@@ -58,13 +61,15 @@ def DOVeg(str,key,alf):
     for i in dict_str:
         if j ==0:
             result += dict_alf[(dict_alf.index(i)-dict_alf.index(dict_key[j]))%p]
+            #print(f"{dict_alf.index(i)} - {dict_alf.index(dict_key[j])} = {(dict_alf.index(i)-dict_alf.index(dict_key[j]))%p} (mod {p})= {dict_alf[(dict_alf.index(i)-dict_alf.index(dict_key[j]))%p]}")
         else:
+            #print(f"{dict_alf.index(i)} - {dict_alf.index(result[j-1:j])} = {(dict_alf.index(i)-dict_alf.index(result[j-1:j]))%p} (mod {p})= {dict_alf[(dict_alf.index(i)-dict_alf.index(result[j-1:j]))%p]}")
             result += dict_alf[(dict_alf.index(i)-dict_alf.index(result[j-1:j]))%p]
         j+=1
-    print(result)
+    print(f"расшифовка с начальным ключем {key}: {result}")
     return result
-#Шифр Веженера по шифротексту
-def СVeg(str,key,alf):
+#Шифр Виженера по шифротексту
+def СVig(str,key,alf):
     if len(key)!=1:
         print("Введите корректный ключ")
         return 0
@@ -74,15 +79,19 @@ def СVeg(str,key,alf):
     p=len(dict_alf)
     result=""
     j=0
+    dd=key
     for i in dict_str:
+        #print(f"{dict_alf.index(i)} + {dict_alf.index(dict_key[j])} = {(dict_alf.index(i)+dict_alf.index(dict_key[j]))%p} (mod{p}) = {dict_alf[(dict_alf.index(i)+dict_alf.index(dict_key[j]))%p]}")
         o=dict_alf[(dict_alf.index(i)+dict_alf.index(dict_key[j]))%p]
         result += o
         dict_key.append(o)
+        dd+=o
         j+=1
-    print(result)
+    #print(dd)
+    print(f"шифовка с начальным ключем {key}: {result}")
     return result
-#расшифровка шифра Веженера по шифротексту
-def DCVeg(str,key,alf):
+#расшифровка шифра Виженера по шифротексту
+def DCVig(str,key,alf):
     dict_alf = list(alf)
     dict_str= list(str)
     p=len(dict_alf)
@@ -91,11 +100,13 @@ def DCVeg(str,key,alf):
     for i in dict_str:
         if j==0:
             o=dict_alf[(dict_alf.index(i)-dict_alf.index(key))%p]
+            #print(f"{dict_alf.index(i)} - {dict_alf.index(key)} = {(dict_alf.index(i)-dict_alf.index(key))%p} (mod {p}) = {dict_alf[(dict_alf.index(i)-dict_alf.index(key))%p]}")
         else:
             o=dict_alf[(dict_alf.index(i)-dict_alf.index(dict_str[j-1]))%p]
+            #print(f"{dict_alf.index(i)} - {dict_alf.index(dict_str[j-1])} = {(dict_alf.index(i)-dict_alf.index(dict_str[j-1]))%p} (mod {p}) = {dict_alf[(dict_alf.index(i)-dict_alf.index(dict_str[j-1]))%p]}")
         result+=o
         j+=1
-    print(result)
+    print(f"расшифовка с начальным ключем {key}: {result}")
     return result
 #индекс встречаемости символов
 def index(str):
@@ -113,7 +124,7 @@ def N(num):
 def CA(str):
     num=max([[i,index(str[::i])] for i in range(1, len(str)//3)],key=lambda a: a[1])[0]
     n=N(num)
-    print(n)
+    print(f"Предполагаемые длины блоков: {n}")
     count=[]
     res={}
     for i in n:
@@ -133,6 +144,7 @@ def CA(str):
             result.append(res)
         r.append(result)
         result=[]
+    print(f"подсчет частот встречаемости для выбранных разбиений: {r}")
     return r
 #проверка
 def mapping(str,key,ca,str_1,alf1):
@@ -187,21 +199,23 @@ def mapping(str,key,ca,str_1,alf1):
         e=0
     return rr
 str="шифр    шифромзашифрован"
+print(f"текст для зашифровки: {str}")
+#str="зашифровал"
 key ="шифр"
 k="р"
-alf=" йцукенгшщзхъфывапролджэячстмиьбю"
-e = Veg(str,key,alf)
-DVeg(e,key,alf)
-r=OVeg(str,k,alf)
-DOVeg(r,k,alf)
-m=СVeg(str,k,alf)
-DCVeg(m,k,alf) 
-e = Veg(str,key,alf)
+alf=" ё.,!йцукенгшщзхъфывапролджэячстмиьбю"
+print(f"используемый алфавит {alf} \nмощность алфавита: {len(alf)}")
+e = Vig(str,key,alf)
+""" DVig(e,key,alf) 
+r=OVig(str,k,alf)
+DOVig(r,k,alf)
+m=СVig(str,k,alf)
+DCVig(m,k,alf)  """
 c=CA(e)
-print(c)
+print("сопоставление")
 h = mapping(str,len(key),c,e,alf)
 print(f"возможные ключи: {h}")
 for i in h:
     print("\n")
     print(f"расшифровка для ключа {i}: ")
-    DVeg(e,i,alf)
+    DVig(e,i,alf)
