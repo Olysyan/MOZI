@@ -6,7 +6,7 @@ def ELGAM_keys(p):
     x=(p-17)//2
     h = pow(g,x,p)
     return [(h,p),(x,p)]
-#
+#зашифровка
 def ELGAM_encrypt(str,open_key):
     result=""
     g=(open_key[1]-5)//2
@@ -16,7 +16,7 @@ def ELGAM_encrypt(str,open_key):
     for i in res:   
         result+=i
     return [result,c1]
-#
+#расшифровка
 def ELGAM_decrypt(str,close_key):
     r=""
     str_blocks=[]
