@@ -198,7 +198,7 @@ def mapping(str,key,ca,str_1,alf1):
     except:
         e=0
     return rr
-str="шифр    шифромзашифрован"
+str="шифр    шифромзашифрованшифр"
 print(f"текст для зашифровки: {str}")
 #str="зашифровал"
 key ="шифр"
