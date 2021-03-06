@@ -2,15 +2,15 @@
 import random
 #генерация ключей
 def ELGAM_keys(p):
-    g=(p-5)//2
-    x=(p-17)//2
+    g=random.randint(1,p-1)
+    x=random.randint(1,p-1)
     h = pow(g,x,p)
-    return [(h,p),(x,p)]
+    return [(h,p,g),(x,p)]
 #зашифровка
 def ELGAM_encrypt(str,open_key):
     result=""
-    g=(open_key[1]-5)//2
-    k=(open_key[1]-9)//2
+    g=open_key[2]
+    k=random.randint(1,open_key[1]-1)
     res=list(map(lambda x:  bin(ord(x)*pow(open_key[0],k,open_key[1])),str))
     c1=pow(g,k,open_key[1])
     for i in res:   
@@ -39,4 +39,4 @@ def ELGAM_decrypt(str,close_key):
 #пример работы
 key=ELGAM_keys(3571)
 a=ELGAM_encrypt("hello this is my message!",key[0])
-print(ELGAM_decrypt(a,key[1]))
+print(a,"\n",ELGAM_decrypt(a,key[1]))
