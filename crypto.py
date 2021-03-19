@@ -1,5 +1,7 @@
 #!/bin/python3.8
 #функция округления квадратного корня
+import math
+import random
 def nround(num):
     j = num**(1/2)
     if (j-0.5)//1 == (j-1)//1:
@@ -118,7 +120,7 @@ def simpnum(num):
     if a=={1}:
         a.add(num)
     return list(a)
-#Факторизация целых чисел ρ-алгоритмом Полларда
+
 def Pnum(set_p):
     r=1
     for i in set_p:
@@ -129,11 +131,12 @@ def Pollard(num,p={1}):
     a=2
     b=2
     d=1
+    num=int(num)
     while num/Pnum(p)!=1:
         a=(a**2+1)%num
         b=(b**2+1)%num
         b=(b**2+1)%num
-        d=nod(a-b,num)
+        d=int(math.gcd(a-b,num))
         if d == num:
             p.add(int(d))
             return list(p)
@@ -141,7 +144,7 @@ def Pollard(num,p={1}):
             Pollard(num/d)
             p.add(int(d))
     return list(p)
-#вычисление квадратного корня по модулю составного числа
+#вычисление квадратного корня по модулю составного числа, вида n=pq, где  p и q - простые числа 
 def comparison(a,b):
     mass_p=Pollard(b)
     mass_sqrt=[]
@@ -164,3 +167,18 @@ def comparison(a,b):
     res.append(-y)
     res.append(y)
     return res
+#
+""" def lenstra(n):
+    a=random.randint(1,n)
+    x1=random.randint(1,n)
+    y1=random.randint(1,n)
+    b=(y1**2-x1**2-a*x1)%n
+
+    d=nod(-4*a**3-27*b**2,n)
+    while d==n:
+        a=random.randint(1,n)
+        b=(y1**2-x1**2-a*x1)%n
+        d=nod(-4*a**3-27*b**2,n)
+    if 1<d<n:
+        return d
+     """

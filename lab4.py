@@ -1,5 +1,8 @@
 #!/bin/python3.8
+from os import close
 from crypto import nod,evkl,Pollard
+from  Crypto.Util import number
+import math
 #Проверка простого числа
 def TestFerma(p)->bool:
     for i in range(2,p):
@@ -7,75 +10,76 @@ def TestFerma(p)->bool:
             return False
     return True
 #Генерация ключей
-def RSA_keys(q,p):
+def RSA_keys(q,p,e: int=None):
     """ if ((not TestFerma(q)) or (not TestFerma(p))):
         return "Введите простые числа" """
     n=q*p
     f=(q-1)*(p-1)
-    e=0
-    for i in range(f//3,f-1):
-        if nod(i,f)==1:
-            e=i
-            break
-    d=evkl(e,f)[0]
+    if e is None:
+        for i in range(3,f//3):
+            if nod(i,f)==1:
+                e=i
+                break 
+    d=pow(int(e),-1,f)
     return [(e,n),(d,n)]
 #Зашифровка
 def RSA_encrypt(str,open_key):
-    result=""
-    res=list(map(lambda x:  bin(pow(ord(x),open_key[0],open_key[1])),str))
-    for i in res:
-        result+=i
-    return result
+    num=256
+    f=math.floor(math.log(open_key[1],num))
+    number_of_blocks = math.ceil(len(str)/f)
+    blocks = [0]*number_of_blocks
+    for j in range(number_of_blocks):
+        for i in range(f):
+            if j*f+i < len(str):
+                blocks[j] += str[j*f+i]*(num**i)
+                print(f"asd{blocks[j] }_{str[j*f+i]}_{i}_{j}")
+    new=list(map(lambda i: pow(i,open_key[0],open_key[1]), blocks))
+    print(new)
+    mass = []
+    for b in new:
+        for i in range(f+1):
+            mass.append(b % num)
+            b //= num
+    print(mass)
+    return bytes(mass)
 #Расшифровка
 def RSA_decrypt(str,close_key):
-    r=""
-    str_blocks=[]
-    str=str+"0b"
-    for i in str:
-        f=0
-        r+=i
-        if len(r)>3 and r[-2:]=="0b" and f==0:
-            str_blocks.append(r[:-2])   
-            r=""
-            f=1
-        elif len(r)>3 and r[-2:]=="0b" and f==1:
-            str_blocks.append(f"0b{r[:-2]}")
-            r=""
-    print(str_blocks)
-    res=list(map(lambda x:  chr(pow(int(x,2),close_key[0],close_key[1])),str_blocks))
-    result=""
-    for i in res:
-        result+=i
-    return result
+    num=256
+    f=math.ceil(math.log(close_key[1],num))
+    number_of_blocks = math.ceil(len(str)/f)
+    blocks = [0]*number_of_blocks
+    for j in range(number_of_blocks):
+        for i in range(f):
+            if j*f+i < len(str):
+                blocks[j] += str[j*f+i]*(num**i)
+    new=list(map(lambda x: pow(x,close_key[0],close_key[1]), blocks))
+    mass = []
+    for b in new:
+        for i in range(math.floor(math.log(close_key[1],num))):
+            mass.append(b % num)
+            b //= num
+    return bytes(mass)
+ 
 #криптоанализ
 def CA(str,open_key):
     mass=Pollard(open_key[1])
     mass.remove(1)
     f=(int(mass[0])-1)*(int(mass[1])-1)
-    close_key=[evkl(open_key[0],f)[0],open_key[1]]
-    r=""
-    str_blocks=[]
-    str=str+"0b"
-    for i in str:
-        f=0
-        r+=i
-        if len(r)>3 and r[-2:]=="0b" and f==0:
-            str_blocks.append(r[:-2])   
-            r=""
-            f=1
-        elif len(r)>3 and r[-2:]=="0b" and f==1:
-            str_blocks.append(f"0b{r[:-2]}")
-            r=""
-    print(str_blocks)
-    res=list(map(lambda x:  chr(pow(int(x,2),close_key[0],close_key[1])),str_blocks))
-    result=""
-    for i in res:
-        result+=i
-    print(result)
-    return result
-key=RSA_keys(3571,1571)
-print(f"open_key{key[0]} close_key{key[1]}")
-a=RSA_encrypt("hello this is my message",key[0])
-print(a)
-print(RSA_decrypt(a,key[1]))
-CA(a,key[0])
+    close_key=[pow(open_key[0],-1,f),open_key[1]]
+    return RSA_decrypt(str,close_key)
+    
+if __name__=="__main__":
+    str=input("Введите строку для шифрования: ").encode('utf-8')
+    a,b=number.getPrime(5),number.getPrime(5)
+    print(a,b)
+    key=RSA_keys(a,b)
+    print(f"open key ={key[0]}\nclose key={key[1]}")
+    enc=RSA_encrypt(str,key[0])
+    dec=RSA_decrypt(enc,key[1])
+    print(f"{enc=}\n{dec[:len(str)]}")
+    print(f"Cryptanalysis result: {CA(enc,key[0])[:len(str)]}")
+    """ num=1488
+    print(key)
+    enc=pow(num,key[0][0],key[0][1])
+    dec=pow(enc,key[1][0],key[1][1])
+    print(f'{num=}\n{enc=}\n{dec=}') """

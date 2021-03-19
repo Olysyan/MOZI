@@ -1,6 +1,7 @@
 #!/bin/python3.8
 #Шифр Виженера
 from collections import Counter
+from os import system
 def Vig(str,key,alf):
     dict_key=list(key)
     dict_alf = list(alf)
@@ -13,7 +14,7 @@ def Vig(str,key,alf):
         #print(f"{dict_alf.index(i)}+{dict_alf.index(dict_key[j%ll])} = {(dict_alf.index(i)+dict_alf.index(dict_key[j%ll]))%p} (mod {p}) = {dict_alf[(dict_alf.index(i)+dict_alf.index(dict_key[j%ll]))%p]}")
         result += dict_alf[(dict_alf.index(i)+dict_alf.index(dict_key[j%ll]))%p]
         j+=1
-    print(f"шифовка с ключем {key}: {result}")
+    #print(f"шифовка с ключем {key}: {result}")
     return result
 #Расшифровка шифра Виженера
 def DVig(str,key,alf):
@@ -28,7 +29,7 @@ def DVig(str,key,alf):
         #print(f"{dict_alf.index(i)}-{dict_alf.index(dict_key[j%ll])} = {(dict_alf.index(i)-dict_alf.index(dict_key[j%ll]))%p} (mod {p}) = {dict_alf[(dict_alf.index(i)-dict_alf.index(dict_key[j%ll]))%p]}")
         result += dict_alf[(dict_alf.index(i)-dict_alf.index(dict_key[j%ll]))%p]
         j+=1
-    print(f"расшифовка с ключем {key}: {result}")
+    #print(f"расшифовка с ключем {key}: {result}")
     return result
 #Шифр Виженера по открытому тексту
 def OVig(str,key,alf):
@@ -66,7 +67,7 @@ def DOVig(str,key,alf):
             #print(f"{dict_alf.index(i)} - {dict_alf.index(result[j-1:j])} = {(dict_alf.index(i)-dict_alf.index(result[j-1:j]))%p} (mod {p})= {dict_alf[(dict_alf.index(i)-dict_alf.index(result[j-1:j]))%p]}")
             result += dict_alf[(dict_alf.index(i)-dict_alf.index(result[j-1:j]))%p]
         j+=1
-    print(f"расшифовка с начальным ключем {key}: {result}")
+    #print(f"расшифовка с начальным ключем {key}: {result}")
     return result
 #Шифр Виженера по шифротексту
 def СVig(str,key,alf):
@@ -106,7 +107,7 @@ def DCVig(str,key,alf):
             #print(f"{dict_alf.index(i)} - {dict_alf.index(dict_str[j-1])} = {(dict_alf.index(i)-dict_alf.index(dict_str[j-1]))%p} (mod {p}) = {dict_alf[(dict_alf.index(i)-dict_alf.index(dict_str[j-1]))%p]}")
         result+=o
         j+=1
-    print(f"расшифовка с начальным ключем {key}: {result}")
+    #print(f"расшифовка с начальным ключем {key}: {result}")
     return result
 #индекс встречаемости символов
 def index(str):
@@ -122,7 +123,8 @@ def N(num):
     return n
 #частотный криптоанализ
 def CA(str):
-    num=max([[i,index(str[::i])] for i in range(1, len(str)//3)],key=lambda a: a[1])[0]
+    num=sorted([[i,index(str[::i])] for i in range(1, len(str)//3)],key=lambda a: a[1])
+    print(num)
     n=N(num)
     print(f"Предполагаемые длины блоков: {n}")
     count=[]
@@ -144,7 +146,7 @@ def CA(str):
             result.append(res)
         r.append(result)
         result=[]
-    print(f"подсчет частот встречаемости для выбранных разбиений: {r}")
+    #print(f"подсчет частот встречаемости для выбранных разбиений: {r}")
     return r
 #проверка
 def mapping(str,key,ca,str_1,alf1):
@@ -182,7 +184,7 @@ def mapping(str,key,ca,str_1,alf1):
         kk=1
         dict_alf1=list(alf1)
         po=len(dict_alf1)
-        print(ss,"\n",str_1)
+        #print(ss,"\n",str_1)
         ty=0
         for ko in str_1:
             try:
@@ -198,12 +200,12 @@ def mapping(str,key,ca,str_1,alf1):
     except:
         e=0
     return rr
-str="шифр    шифромзашифрованшифр"
-print(f"текст для зашифровки: {str}")
+s=open('text.txt')
+str=s.read().lower()
 #str="зашифровал"
 key ="шифр"
 k="р"
-alf=" ё.,!йцукенгшщзхъфывапролджэячстмиьбю"
+alf=" -ё.,?!йцукенгшщзхъфывапрол\nджэячстмиьбюше"
 print(f"используемый алфавит {alf} \nмощность алфавита: {len(alf)}")
 e = Vig(str,key,alf)
 """ DVig(e,key,alf) 
@@ -213,9 +215,9 @@ m=СVig(str,k,alf)
 DCVig(m,k,alf)  """
 c=CA(e)
 print("сопоставление")
-h = mapping(str,len(key),c,e,alf)
-print(f"возможные ключи: {h}")
+""" h = mapping(str,len(key),c,e,alf) """
+#print(f"возможные ключи: {h}")
+""" 
 for i in h:
-    print("\n")
-    print(f"расшифровка для ключа {i}: ")
-    DVig(e,i,alf)
+    system(f"echo 'расшифровка для ключа {i}:\n {DVig(e,i,alf)}\n' >>  var.txt")
+     """
