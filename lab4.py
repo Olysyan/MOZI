@@ -1,5 +1,4 @@
 #!/bin/python3.8
-from os import close
 from crypto import nod,evkl,Pollard
 from  Crypto.Util import number
 import math
@@ -15,6 +14,7 @@ def RSA_keys(q,p,e: int=None):
         return "Введите простые числа" """
     n=q*p
     f=(q-1)*(p-1)
+    print(f)
     if e is None:
         for i in range(3,f//3):
             if nod(i,f)==1:
@@ -26,29 +26,32 @@ def RSA_keys(q,p,e: int=None):
 def RSA_encrypt(str,open_key):
     num=256
     f=math.floor(math.log(open_key[1],num))
-    number_of_blocks = math.ceil(len(str)/f)
-    blocks = [0]*number_of_blocks
-    for j in range(number_of_blocks):
+    #print(f"log{open_key[1]} {num} = {f}")
+    numblocks = math.ceil(len(str)/f)
+    blocks = [0]*numblocks
+    for j in range(numblocks):
         for i in range(f):
             if j*f+i < len(str):
                 blocks[j] += str[j*f+i]*(num**i)
-                print(f"asd{blocks[j] }_{str[j*f+i]}_{i}_{j}")
+                #print(f"asd{blocks[j] }_{str[j*f+i]}_{i}_{j}")
+    #print(blocks)
     new=list(map(lambda i: pow(i,open_key[0],open_key[1]), blocks))
-    print(new)
+    #print(new)
     mass = []
     for b in new:
         for i in range(f+1):
             mass.append(b % num)
             b //= num
-    print(mass)
+    #print(mass)
     return bytes(mass)
 #Расшифровка
 def RSA_decrypt(str,close_key):
     num=256
     f=math.ceil(math.log(close_key[1],num))
-    number_of_blocks = math.ceil(len(str)/f)
-    blocks = [0]*number_of_blocks
-    for j in range(number_of_blocks):
+    numblocks = math.ceil(len(str)/f)
+    #print(f,numblocks)
+    blocks = [0]*numblocks
+    for j in range(numblocks):
         for i in range(f):
             if j*f+i < len(str):
                 blocks[j] += str[j*f+i]*(num**i)
@@ -62,7 +65,8 @@ def RSA_decrypt(str,close_key):
  
 #криптоанализ
 def CA(str,open_key):
-    mass=Pollard(open_key[1])
+    #mass=Pollard(open_key[1])
+    mass=Lenstr(open_key[1])
     mass.remove(1)
     f=(int(mass[0])-1)*(int(mass[1])-1)
     close_key=[pow(open_key[0],-1,f),open_key[1]]
@@ -70,7 +74,7 @@ def CA(str,open_key):
     
 if __name__=="__main__":
     str=input("Введите строку для шифрования: ").encode('utf-8')
-    a,b=number.getPrime(5),number.getPrime(5)
+    a,b=number.getPrime(256),number.getPrime(256)
     print(a,b)
     key=RSA_keys(a,b)
     print(f"open key ={key[0]}\nclose key={key[1]}")

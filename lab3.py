@@ -1,7 +1,8 @@
 #!/bin/python3.8
 #Шифр Виженера
+import numpy as np
 from collections import Counter
-from os import system
+import math
 def Vig(str,key,alf):
     dict_key=list(key)
     dict_alf = list(alf)
@@ -10,8 +11,10 @@ def Vig(str,key,alf):
     p=len(dict_alf)
     result=""
     j=0
+    op={}
     for i in dict_str:
         #print(f"{dict_alf.index(i)}+{dict_alf.index(dict_key[j%ll])} = {(dict_alf.index(i)+dict_alf.index(dict_key[j%ll]))%p} (mod {p}) = {dict_alf[(dict_alf.index(i)+dict_alf.index(dict_key[j%ll]))%p]}")
+        op[i]=dict_alf[(dict_alf.index(i)+dict_alf.index(dict_key[j%ll]))%p]
         result += dict_alf[(dict_alf.index(i)+dict_alf.index(dict_key[j%ll]))%p]
         j+=1
     #print(f"шифовка с ключем {key}: {result}")
@@ -109,7 +112,7 @@ def DCVig(str,key,alf):
         j+=1
     #print(f"расшифовка с начальным ключем {key}: {result}")
     return result
-#индекс встречаемости символов
+#индекс совпадения
 def index(str):
     count = Counter(list(str))
     return sum(i*(i-1) for i in count.values())/(len(str)*(len(str) - 1))
@@ -121,91 +124,69 @@ def N(num):
             n.append(i)
     n.append(num)
     return n
+
 #частотный криптоанализ
-def CA(str):
-    num=sorted([[i,index(str[::i])] for i in range(1, len(str)//3)],key=lambda a: a[1])
-    print(num)
-    n=N(num)
-    print(f"Предполагаемые длины блоков: {n}")
-    count=[]
-    res={}
-    for i in n:
-        count.append([str[j::i] for j in range(i)])
-    result=[]
-    r=[]
-    for i in count:
-        for k in i:
-            alf=set(k)
-            c=0
-            for l in alf:
-                for j in k:
-                    if j==l:
-                        c+=1
-                res[l]=c
-                c=0
-            result.append(res)
-        r.append(result)
-        result=[]
-    #print(f"подсчет частот встречаемости для выбранных разбиений: {r}")
-    return r
-#проверка
-def mapping(str,key,ca,str_1,alf1):
-    res={}
-    result=[]
-    count=[]
-    end={}
-    ss=""
-    count.append([str[j::key] for j in range(key)])
-    for i in count:
-        for k in i:
-            alf=set(k)
-            c=0
-            for l in alf:
-                for j in k:
-                    if j==l:
-                        c+=1
-                res[l]=c
-                c=0
-            result.append(res)
-    try:
-        for lm in range(len(ca)):
-            for i in result:
-                for f,p in i.items():
-                    for mn in ca[lm]:
-                        for t,y in mn.items():
-                            if y==p:
-                                end[f]=t
-        for i in str_1:
-            for f,p in end.items():
-                if i ==p:
-                    ss+=f
-        r=""
-        rr=[]
-        kk=1
-        dict_alf1=list(alf1)
-        po=len(dict_alf1)
-        #print(ss,"\n",str_1)
-        ty=0
-        for ko in str_1:
-            try:
-                r+= dict_alf1[(dict_alf1.index(str_1[ty])-dict_alf1.index(ss[ty]))%po]
-                ty+=1
-                if kk==key:
-                    rr.append(r)
-                    r=""
-                    kk=0
-                kk+=1
-            except:
-                e=0
-    except:
-        e=0
-    return rr
-s=open('text.txt')
-str=s.read().lower()
-#str="зашифровал"
-key ="шифр"
+def CA(str,auf):
+    num=sorted([[i,index(str[::i])] for i in range(1, 10)],key=lambda a: a[1])[-2:]
+
+    r=0
+    if (num[0][1]-num[1][1])>0.009:
+        nu=num[0][0]
+        r=0.2
+    elif (-num[0][1]+num[1][1])>0.009:
+        nu=num[1][0]
+        r=0.2
+    else:
+        nu=math.gcd(num[0][0],num[1][0])
+    if nu == 1:
+        nu=num[0][0]
+        r=1
+    n=[nu]
+    return nu
+def counter(text,alf):
+    d={}
+    k=0
+    f=len(text)
+    for i in alf:
+        for j in text:
+            if i==j:
+                k+=1
+                d[i]=k/f
+        k=0
+    return d
+def CA2(str,text,key_size,alf):
+    m=[]
+    for i in range(key_size):
+        m.append(counter(str[i::key_size],alf))
+    rm=counter(text,alf)
+    op=[]
+    res=[]
+    for i in m:
+        new={}
+        for j,h in i.items():
+            for t,l in rm.items():
+                aa=abs(l-h)
+                if op ==[]:
+                    op.append(aa)
+                if op[0]>aa:
+                    op[0]=aa
+                    new[j]=t
+            op=[]
+        res.append(new)
+    result=""
+    for i in res:
+        tt=[]
+        for t,y in i.items():
+            tt.append((alf.index(t)-alf.index(y))%(len(alf)))
+        result+=alf[max(set(tt), key = tt.count)]
+    return result
+    
+str=open('text.txt').read().lower().replace('\n','')
+auf=open('text2.txt').read().lower().replace('\n','')
+key ="zfrrt"
 k="р"
-alf=" -ё.,?!йцукенгшщзхъфывапрол\nджэячстмиьбюше"
+alf="qwertyuiopasdfghjklzxcvbnm .,"
+print(f"ключ для шифрования: {key}")
 print(f"используемый алфавит {alf} \nмощность алфавита: {len(alf)}")
 e = Vig(str,key,alf)
 """ DVig(e,key,alf) 
@@ -213,11 +194,5 @@ r=OVig(str,k,alf)
 DOVig(r,k,alf)
 m=СVig(str,k,alf)
 DCVig(m,k,alf)  """
-c=CA(e)
-print("сопоставление")
-""" h = mapping(str,len(key),c,e,alf) """
-#print(f"возможные ключи: {h}")
-""" 
-for i in h:
-    system(f"echo 'расшифровка для ключа {i}:\n {DVig(e,i,alf)}\n' >>  var.txt")
-     """
+c=CA(e,auf)
+print(f"результат криптоанализа: {CA2(e,auf,c,alf)}")
